@@ -1,0 +1,2664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathEarn - Ultimate Math Earning Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: 240 100% 60%; /* #4C6EF5 */
+            --primary-dark: 240 100% 50%; /* #3B5EF5 */
+            --secondary: 280 100% 60%; /* #9F40FF */
+            --success: 120 100% 40%; /* #00CC66 */
+            --danger: 0 100% 60%; /* #FF4040 */
+            --warning: 45 100% 50%; /* #FFA500 */
+            --background: 210 11% 98%; /* #F5F7FA */
+            --surface: 0 0% 100%; /* #FFFFFF */
+            --text: 220 26% 14%; /* #1A1D2E */
+            --text-secondary: 220 9% 46%; /* #6B7280 */
+            --border: 220 13% 91%; /* #E5E7EB */
+            --shadow: 220 3% 15%; /* #1F2937 */
+            --gold: 45 100% 50%; /* #FFD700 */
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, 
+                hsl(var(--primary)) 0%, 
+                hsl(var(--secondary)) 50%, 
+                hsl(45 100% 60%) 100%);
+            min-height: 100vh;
+            color: hsl(var(--text));
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            background: hsl(var(--surface));
+            border: 2px solid hsl(var(--border));
+            border-radius: 25px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px hsla(var(--shadow), 0.1);
+        }
+
+        .theme-toggle:hover {
+            border-color: hsl(var(--primary));
+            transform: scale(1.1);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: hsl(var(--primary));
+        }
+
+        /* Dark Theme */
+        body.dark-theme {
+            --background: 220 26% 14%;
+            --surface: 220 26% 18%;
+            --text: 210 11% 96%;
+            --text-secondary: 220 9% 70%;
+            --border: 220 13% 25%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: hsla(var(--surface), 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: hsl(var(--primary));
+        }
+
+        .nav-brand i {
+            font-size: 2rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .wallet-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: hsl(var(--gold));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: hsl(var(--danger));
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .logout-btn:hover {
+            background: hsl(0 100% 50%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px hsla(var(--danger), 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            padding: 2rem 0;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Screen Management */
+        .screen {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Auth Screen Styles */
+        .auth-container {
+            background: hsla(var(--surface), 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px hsla(var(--shadow), 0.1);
+            border: 1px solid hsla(var(--border), 0.5);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: hsl(var(--background));
+            border-radius: 10px;
+            padding: 0.25rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: hsl(var(--primary));
+            color: white;
+        }
+
+        .auth-form {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: hsl(var(--text));
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid hsl(var(--border));
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: hsl(var(--surface));
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px hsla(var(--primary), 0.1);
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px hsla(var(--primary), 0.3);
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            background: hsla(var(--surface), 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px hsla(var(--shadow), 0.1);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--text));
+        }
+
+        /* Difficulty Selector */
+        .difficulty-selector {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, 
+                hsla(var(--primary), 0.1), 
+                hsla(var(--secondary), 0.1));
+            border-radius: 15px;
+            border: 2px solid hsla(var(--primary), 0.2);
+        }
+
+        .difficulty-selector h3 {
+            margin-bottom: 1rem;
+            color: hsl(var(--text));
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: hsl(var(--surface));
+            border: 2px solid hsl(var(--border));
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .difficulty-btn:hover {
+            border-color: hsl(var(--primary));
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px hsla(var(--primary), 0.2);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+            color: white;
+            border-color: hsl(var(--primary));
+        }
+
+        .difficulty-btn i {
+            font-size: 2rem;
+        }
+
+        .difficulty-btn span {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .difficulty-btn small {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .task-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, 
+                hsla(var(--primary), 0.1), 
+                hsla(var(--secondary), 0.1));
+            border: 2px solid hsla(var(--primary), 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                hsla(var(--primary), 0.1), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px hsla(var(--primary), 0.2);
+            border-color: hsl(var(--primary));
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            color: hsl(var(--primary));
+            margin-bottom: 1rem;
+        }
+
+        .category-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--text));
+        }
+
+        .category-card p {
+            color: hsl(var(--text-secondary));
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .reward-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: hsl(var(--gold));
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, 
+                hsla(var(--primary), 0.1), 
+                hsla(var(--secondary), 0.1));
+            border: 2px solid hsla(var(--primary), 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px hsla(var(--primary), 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: hsl(var(--primary));
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-info h4 {
+            font-size: 0.9rem;
+            color: hsl(var(--text-secondary));
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: hsl(var(--text));
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, hsl(var(--secondary)), hsl(280 100% 50%));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px hsla(var(--secondary), 0.3);
+        }
+
+        .cashout-btn {
+            background: linear-gradient(135deg, hsl(var(--success)), hsl(120 100% 30%));
+        }
+
+        .cashout-btn:disabled {
+            background: hsl(var(--text-secondary));
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Task Screen Styles */
+        .task-container, .achievements-container, .leaderboard-container, 
+        .challenge-container, .cashout-container, .transactions-container,
+        .tournaments-container, .friends-container, .powerups-container,
+        .minigames-container, .tutorial-container {
+            background: hsla(var(--surface), 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px hsla(var(--shadow), 0.1);
+        }
+
+        .task-header, .screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: hsl(var(--text-secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: hsl(var(--text));
+            transform: scale(1.1);
+        }
+
+        .task-progress {
+            background: hsl(var(--background));
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        .question-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: hsl(var(--text));
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, 
+                hsla(var(--primary), 0.1), 
+                hsla(var(--secondary), 0.1));
+            border-radius: 15px;
+            border: 2px solid hsla(var(--primary), 0.2);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .option-btn {
+            background: hsla(var(--surface), 0.8);
+            border: 2px solid hsl(var(--border));
+            padding: 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: hsl(var(--text));
+        }
+
+        .option-btn:hover {
+            background: hsla(var(--primary), 0.1);
+            border-color: hsl(var(--primary));
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px hsla(var(--primary), 0.2);
+        }
+
+        .option-btn.correct {
+            background: hsl(var(--success));
+            color: white;
+            border-color: hsl(var(--success));
+        }
+
+        .option-btn.incorrect {
+            background: hsl(var(--danger));
+            color: white;
+            border-color: hsl(var(--danger));
+        }
+
+        /* Power-ups in task */
+        .task-powerups {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .powerup-btn {
+            background: linear-gradient(135deg, hsl(var(--secondary)), hsl(280 100% 50%));
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .powerup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px hsla(var(--secondary), 0.3);
+        }
+
+        .powerup-btn:disabled {
+            background: hsl(var(--text-secondary));
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .task-footer {
+            display: flex;
+            justify-content: center;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: hsl(var(--warning));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: hsla(var(--shadow), 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: hsl(var(--surface));
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 25px 50px hsla(var(--shadow), 0.3);
+            animation: modalAppear 0.3s ease;
+            max-width: 90%;
+        }
+
+        @keyframes modalAppear {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-icon.correct {
+            color: hsl(var(--success));
+        }
+
+        .result-icon.incorrect {
+            color: hsl(var(--danger));
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px hsla(var(--primary), 0.3);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: hsl(var(--success));
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px hsla(var(--shadow), 0.2);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: hsl(var(--danger));
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Lucky Wheel */
+        .wheel-container {
+            position: relative;
+            display: inline-block;
+            margin: 2rem 0;
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 8px solid hsl(var(--gold));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(
+                hsl(var(--primary)) 0deg 60deg,
+                hsl(var(--secondary)) 60deg 120deg,
+                hsl(var(--success)) 120deg 180deg,
+                hsl(var(--warning)) 180deg 240deg,
+                hsl(var(--danger)) 240deg 300deg,
+                hsl(var(--gold)) 300deg 360deg
+            );
+            transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .spin-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: hsl(var(--surface));
+            border: 4px solid hsl(var(--gold));
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .spin-btn:hover {
+            background: hsl(var(--gold));
+            color: white;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .spin-btn:disabled {
+            background: hsl(var(--text-secondary));
+            border-color: hsl(var(--text-secondary));
+            cursor: not-allowed;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Empty state styles */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: hsl(var(--text-secondary));
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: hsl(var(--text-secondary));
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: hsl(var(--text));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .header .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .question-text {
+                font-size: 1.5rem;
+                padding: 1.5rem;
+            }
+            
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-actions {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .difficulty-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .task-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .theme-toggle {
+                left: 10px;
+                top: 80px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Focus styles for accessibility */
+        button:focus,
+        input:focus,
+        select:focus {
+            outline: 2px solid hsl(var(--primary));
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-calculator"></i>
+                <span>MathEarn Ultimate</span>
+            </div>
+            <div class="header-right" id="headerRight" style="display: none;">
+                <div class="wallet-display">
+                    <i class="fas fa-coins"></i>
+                    <span id="coinBalance">25</span> Coins
+                </div>
+                <div class="user-menu">
+                    <span id="userNameDisplay"></span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Login/Register Screen -->
+        <div class="screen" id="authScreen">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1>Welcome to MathEarn Ultimate</h1>
+                    <p>The complete math earning platform with tournaments, friends, and unlimited rewards!</p>
+                </div>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                    <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form class="auth-form" id="loginForm">
+                    <h2>Login to Your Account</h2>
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form class="auth-form" id="registerForm" style="display: none;">
+                    <h2>Create New Account</h2>
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="auth-btn">
+                        <i class="fas fa-user-plus"></i>
+                        Register & Get Bonus!
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div class="screen" id="dashboardScreen" style="display: none;">
+            <div class="dashboard-container">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="dashboardUserName"></span>!</h1>
+                    <p>Ready to earn more coins? Choose your difficulty and start learning!</p>
+                </div>
+
+                <div class="difficulty-selector">
+                    <h3>Choose Your Challenge Level</h3>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn active" onclick="setDifficulty('easy')" data-difficulty="easy">
+                            <i class="fas fa-smile"></i>
+                            <span>Easy</span>
+                            <small>1.5x coins</small>
+                        </button>
+                        <button class="difficulty-btn" onclick="setDifficulty('medium')" data-difficulty="medium">
+                            <i class="fas fa-meh"></i>
+                            <span>Medium</span>
+                            <small>2x coins</small>
+                        </button>
+                        <button class="difficulty-btn" onclick="setDifficulty('hard')" data-difficulty="hard">
+                            <i class="fas fa-fire"></i>
+                            <span>Hard</span>
+                            <small>3x coins</small>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="task-categories">
+                    <div class="category-card" onclick="startTask('math')">
+                        <div class="category-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <h3>Basic Math</h3>
+                        <p>Addition, subtraction, multiplication</p>
+                        <div class="reward-info">
+                            <i class="fas fa-coins"></i>
+                            <span id="mathReward">5-15 coins</span>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="startTask('algebra')">
+                        <div class="category-icon">
+                            <i class="fas fa-superscript"></i>
+                        </div>
+                        <h3>Algebra</h3>
+                        <p>Equations & variables</p>
+                        <div class="reward-info">
+                            <i class="fas fa-coins"></i>
+                            <span id="algebraReward">15-45 coins</span>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="startTask('geometry')">
+                        <div class="category-icon">
+                            <i class="fas fa-shapes"></i>
+                        </div>
+                        <h3>Geometry</h3>
+                        <p>Areas, volumes & shapes</p>
+                        <div class="reward-info">
+                            <i class="fas fa-coins"></i>
+                            <span id="geometryReward">12-36 coins</span>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="startTask('calculus')">
+                        <div class="category-icon">
+                            <i class="fas fa-function"></i>
+                        </div>
+                        <h3>Calculus</h3>
+                        <p>Derivatives & integrals</p>
+                        <div class="reward-info">
+                            <i class="fas fa-coins"></i>
+                            <span id="calculusReward">25-75 coins</span>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="startTask('statistics')">
+                        <div class="category-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Statistics</h3>
+                        <p>Data analysis & probability</p>
+                        <div class="reward-info">
+                            <i class="fas fa-coins"></i>
+                            <span id="statisticsReward">18-54 coins</span>
+                        </div>
+                    </div>
+
+                    <div class="category-card" onclick="startTask('braintraining')">
+                        <div class="category-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Brain Training</h3>
+                        <p>Logic & pattern puzzles</p>
+                        <div class="reward-info">
+                            <i class="fas fa-coins"></i>
+                            <span id="brainReward">8-24 coins</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                        <div class="stat-info">
+                            <h4>Daily Streak</h4>
+                            <span id="dailyStreak">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                        <div class="stat-info">
+                            <h4>Your Level</h4>
+                            <span id="userLevel">1</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-medal"></i></div>
+                        <div class="stat-info">
+                            <h4>Badges</h4>
+                            <span id="badgeCount">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-info">
+                            <h4>Accuracy</h4>
+                            <span id="accuracyRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <button class="action-btn" onclick="showMiniGames()">
+                        <i class="fas fa-gamepad"></i>
+                        Mini Games
+                    </button>
+                    <button class="action-btn" onclick="showTournaments()">
+                        <i class="fas fa-trophy"></i>
+                        Tournaments
+                    </button>
+                    <button class="action-btn" onclick="showFriends()">
+                        <i class="fas fa-users"></i>
+                        Friends
+                    </button>
+                    <button class="action-btn" onclick="showPowerUps()">
+                        <i class="fas fa-bolt"></i>
+                        Power-Ups
+                    </button>
+                    <button class="action-btn" onclick="showAchievements()">
+                        <i class="fas fa-medal"></i>
+                        Achievements
+                    </button>
+                    <button class="action-btn" onclick="showLeaderboard()">
+                        <i class="fas fa-crown"></i>
+                        Leaderboard
+                    </button>
+                    <button class="action-btn" onclick="showDailyChallenge()">
+                        <i class="fas fa-star"></i>
+                        Daily Challenge
+                    </button>
+                    <button class="action-btn cashout-btn" onclick="showCashout()" id="cashoutBtn">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Cash Out
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Screen -->
+        <div class="screen" id="taskScreen" style="display: none;">
+            <div class="task-container">
+                <div class="task-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2 id="taskTypeTitle">Math Tasks</h2>
+                    <div class="task-progress">
+                        Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span>
+                    </div>
+                </div>
+
+                <div class="task-powerups" id="taskPowerups">
+                    <!-- Power-ups will be dynamically added here -->
+                </div>
+
+                <div class="question-container">
+                    <div class="question-text" id="questionText">
+                        Loading question...
+                    </div>
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Options will be dynamically generated -->
+                    </div>
+                </div>
+
+                <div class="task-footer">
+                    <div class="timer" id="timer">
+                        <i class="fas fa-clock"></i>
+                        <span id="timeRemaining">30s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Games Screen -->
+        <div class="screen" id="miniGamesScreen" style="display: none;">
+            <div class="minigames-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Mini Games & Lucky Wheel</h2>
+                </div>
+
+                <div class="minigames-content" style="text-align: center;">
+                    <div class="lucky-wheel-section">
+                        <h3>Daily Lucky Wheel - Spin for Bonus Coins!</h3>
+                        <div class="wheel-container">
+                            <div class="wheel" id="wheelSpinner"></div>
+                            <button class="spin-btn" onclick="spinWheel()" id="spinButton">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Spin!</span>
+                            </button>
+                        </div>
+                        <p id="wheelStatus">Free spin available!</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                        <div style="background: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(280, 100%, 60%, 0.1)); border: 2px solid hsla(240, 100%, 60%, 0.2); border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="startQuickMath()">
+                            <i class="fas fa-bolt" style="font-size: 3rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                            <h4>Speed Math</h4>
+                            <p>Quick calculations</p>
+                            <span style="background: hsl(120, 100%, 40%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;">+25 coins</span>
+                        </div>
+                        <div style="background: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(280, 100%, 60%, 0.1)); border: 2px solid hsla(240, 100%, 60%, 0.2); border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="startMemoryGame()">
+                            <i class="fas fa-brain" style="font-size: 3rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                            <h4>Memory Game</h4>
+                            <p>Remember the sequence</p>
+                            <span style="background: hsl(120, 100%, 40%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;">+30 coins</span>
+                        </div>
+                        <div style="background: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(280, 100%, 60%, 0.1)); border: 2px solid hsla(240, 100%, 60%, 0.2); border-radius: 15px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease;" onclick="startPuzzleGame()">
+                            <i class="fas fa-puzzle-piece" style="font-size: 3rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                            <h4>Number Puzzle</h4>
+                            <p>Solve the pattern</p>
+                            <span style="background: hsl(120, 100%, 40%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;">+35 coins</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simple Additional Screens -->
+        <div class="screen" id="achievementsScreen" style="display: none;">
+            <div class="achievements-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Your Achievements</h2>
+                </div>
+                <div id="achievementsList">
+                    <div class="empty-state">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Start Earning Achievements!</h3>
+                        <p>Complete tasks to unlock badges and earn bonus rewards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="leaderboardScreen" style="display: none;">
+            <div class="leaderboard-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Global Leaderboard</h2>
+                </div>
+                <div id="leaderboardList">
+                    <div class="empty-state">
+                        <i class="fas fa-crown"></i>
+                        <h3>Climb the Rankings!</h3>
+                        <p>Complete more tasks to appear on the global leaderboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="dailyChallengeScreen" style="display: none;">
+            <div class="challenge-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Daily Challenge</h2>
+                </div>
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; color: hsl(45, 100%, 50%); margin-bottom: 1rem;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 id="challengeTitle">Algebra Master Challenge</h3>
+                    <p id="challengeDescription">Solve 5 algebra problems to earn bonus rewards!</p>
+                    <div style="margin: 2rem 0;">
+                        <span style="background: hsl(120, 100%, 40%); color: white; padding: 1rem 2rem; border-radius: 25px; font-weight: bold;">
+                            <i class="fas fa-coins"></i> 100 Bonus Coins
+                        </span>
+                    </div>
+                    <button class="auth-btn" onclick="startDailyChallenge()" style="max-width: 300px;">
+                        <i class="fas fa-play"></i>
+                        Start Challenge
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="tournamentsScreen" style="display: none;">
+            <div class="tournaments-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Tournaments & Events</h2>
+                </div>
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="empty-state">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Weekly Tournaments Coming Soon!</h3>
+                        <p>Compete with players worldwide for amazing prizes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="friendsScreen" style="display: none;">
+            <div class="friends-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Friends & Social</h2>
+                </div>
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>Connect with Friends!</h3>
+                        <p>Add friends, create teams, and earn referral bonuses.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="powerUpsScreen" style="display: none;">
+            <div class="powerups-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Power-Ups Shop</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1rem;">
+                    <div style="background: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(280, 100%, 60%, 0.1)); border: 2px solid hsla(240, 100%, 60%, 0.2); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                        <i class="fas fa-clock" style="font-size: 3rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                        <h4>Time Freeze</h4>
+                        <p>Stop the timer for 10 seconds</p>
+                        <div style="color: hsl(45, 100%, 50%); font-weight: bold; margin-top: 1rem;">
+                            <i class="fas fa-coins"></i> 50 coins
+                        </div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(280, 100%, 60%, 0.1)); border: 2px solid hsla(240, 100%, 60%, 0.2); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                        <i class="fas fa-lightbulb" style="font-size: 3rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                        <h4>Hint</h4>
+                        <p>Get a helpful hint for the question</p>
+                        <div style="color: hsl(45, 100%, 50%); font-weight: bold; margin-top: 1rem;">
+                            <i class="fas fa-coins"></i> 30 coins
+                        </div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, hsla(240, 100%, 60%, 0.1), hsla(280, 100%, 60%, 0.1)); border: 2px solid hsla(240, 100%, 60%, 0.2); border-radius: 15px; padding: 1.5rem; text-align: center;">
+                        <i class="fas fa-times-circle" style="font-size: 3rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                        <h4>Remove Option</h4>
+                        <p>Eliminate one wrong answer</p>
+                        <div style="color: hsl(45, 100%, 50%); font-weight: bold; margin-top: 1rem;">
+                            <i class="fas fa-coins"></i> 40 coins
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="transactionsScreen" style="display: none;">
+            <div class="transactions-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Transaction History</h2>
+                </div>
+                <div id="transactionsList">
+                    <div class="empty-state">
+                        <i class="fas fa-receipt"></i>
+                        <h3>No Transactions Yet</h3>
+                        <p>Complete tasks to see your earnings history.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen" id="cashoutScreen" style="display: none;">
+            <div class="cashout-container">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Cash Out Rewards</h2>
+                </div>
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 2rem; font-weight: bold; color: hsl(45, 100%, 50%); margin-bottom: 1rem;">
+                        <i class="fas fa-coins"></i>
+                        <span id="cashoutBalance">0</span> Coins
+                    </div>
+                    <p>100 Coins = $10.00</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="reward-option" onclick="selectReward('paypal', 100)">
+                        <i class="fab fa-paypal" style="font-size: 2.5rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                        <h4>$10 PayPal</h4>
+                        <p>100 coins</p>
+                    </div>
+                    <div class="reward-option" onclick="selectReward('amazon', 100)">
+                        <i class="fab fa-amazon" style="font-size: 2.5rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                        <h4>$10 Amazon Gift Card</h4>
+                        <p>100 coins</p>
+                    </div>
+                    <div class="reward-option" onclick="selectReward('google', 100)">
+                        <i class="fab fa-google-play" style="font-size: 2.5rem; color: hsl(240, 100%, 60%); margin-bottom: 1rem;"></i>
+                        <h4>$10 Google Play</h4>
+                        <p>100 coins</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="result-icon" id="resultIcon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 id="resultTitle">Correct!</h3>
+            <p id="resultMessage">You earned coins!</p>
+            <button class="modal-btn" onclick="nextQuestion()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <i class="fas fa-info-circle"></i>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced MathEarn Ultimate App
+        class MathEarnUltimate {
+            constructor() {
+                this.currentUser = null;
+                this.currentTask = null;
+                this.questionIndex = 0;
+                this.timer = null;
+                this.timeRemaining = 30;
+                this.selectedReward = null;
+                this.currentDifficulty = 'easy';
+                this.lastWheelSpin = null;
+                this.powerUpsOwned = [];
+                this.activePowerUps = {};
+                this.init();
+            }
+
+            init() {
+                this.loadUserSession();
+                this.bindEvents();
+                this.updateCashoutButton();
+                this.checkDailyLogin();
+                this.updateUserStats();
+                this.updateDifficultyDisplay();
+            }
+
+            // User Management
+            loadUserSession() {
+                const userData = localStorage.getItem('mathEarnUser');
+                if (userData) {
+                    this.currentUser = JSON.parse(userData);
+                    this.showDashboard();
+                } else {
+                    this.showAuthScreen();
+                }
+            }
+
+            saveUserSession() {
+                localStorage.setItem('mathEarnUser', JSON.stringify(this.currentUser));
+            }
+
+            register(name, email, password) {
+                const existingUsers = JSON.parse(localStorage.getItem('mathEarnUsers') || '[]');
+                if (existingUsers.find(user => user.email === email)) {
+                    this.showNotification('User already exists with this email!', 'error');
+                    return false;
+                }
+
+                const newUser = {
+                    id: Date.now(),
+                    name,
+                    email,
+                    password,
+                    coins: 50, // Enhanced welcome bonus
+                    level: 1,
+                    xp: 0,
+                    dailyStreak: 1,
+                    lastLoginDate: new Date().toDateString(),
+                    totalEarnings: 50,
+                    tasksCompleted: 0,
+                    correctAnswers: 0,
+                    totalAnswers: 0,
+                    achievements: [],
+                    powerUps: [],
+                    friends: [],
+                    referrals: 0,
+                    lastWheelSpin: null,
+                    transactions: [{
+                        id: Date.now(),
+                        type: 'bonus',
+                        description: 'Welcome Bonus - Ultimate Edition!',
+                        amount: 50,
+                        date: new Date().toISOString()
+                    }],
+                    createdAt: new Date().toISOString()
+                };
+
+                existingUsers.push(newUser);
+                localStorage.setItem('mathEarnUsers', JSON.stringify(existingUsers));
+                
+                this.currentUser = newUser;
+                this.saveUserSession();
+                this.showNotification('🎉 Welcome! You got 50 bonus coins to start!', 'success');
+                this.showDashboard();
+                return true;
+            }
+
+            login(email, password) {
+                const existingUsers = JSON.parse(localStorage.getItem('mathEarnUsers') || '[]');
+                const user = existingUsers.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    this.currentUser = user;
+                    this.saveUserSession();
+                    this.showNotification('Welcome back! Ready to earn more coins?', 'success');
+                    this.showDashboard();
+                    return true;
+                } else {
+                    this.showNotification('Invalid email or password!', 'error');
+                    return false;
+                }
+            }
+
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('mathEarnUser');
+                this.showAuthScreen();
+                this.showNotification('See you soon!', 'success');
+            }
+
+            // Difficulty System
+            setDifficulty(difficulty) {
+                this.currentDifficulty = difficulty;
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-difficulty="${difficulty}"]`).classList.add('active');
+                this.updateDifficultyDisplay();
+            }
+
+            updateDifficultyDisplay() {
+                const multipliers = { easy: 1.5, medium: 2, hard: 3 };
+                const mult = multipliers[this.currentDifficulty];
+                
+                const baseRewards = {
+                    math: '5-15',
+                    algebra: '15-45', 
+                    geometry: '12-36',
+                    calculus: '25-75',
+                    statistics: '18-54',
+                    braintraining: '8-24'
+                };
+
+                Object.keys(baseRewards).forEach(subject => {
+                    const element = document.getElementById(`${subject}Reward`);
+                    if (element) {
+                        const [min, max] = baseRewards[subject].split('-').map(Number);
+                        const newMin = Math.floor(min * mult);
+                        const newMax = Math.floor(max * mult);
+                        element.textContent = `${newMin}-${newMax} coins`;
+                    }
+                });
+            }
+
+            // Enhanced Task Generation
+            generateMathTask() {
+                const operations = ['+', '-', '*', '/'];
+                const operation = operations[Math.floor(Math.random() * operations.length)];
+                const difficulty = this.currentDifficulty;
+                
+                let num1, num2, correctAnswer;
+                let range = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 50 : 100;
+                
+                switch (operation) {
+                    case '+':
+                        num1 = Math.floor(Math.random() * range) + 1;
+                        num2 = Math.floor(Math.random() * range) + 1;
+                        correctAnswer = num1 + num2;
+                        break;
+                    case '-':
+                        num1 = Math.floor(Math.random() * range) + range;
+                        num2 = Math.floor(Math.random() * range) + 1;
+                        correctAnswer = num1 - num2;
+                        break;
+                    case '*':
+                        const maxMult = difficulty === 'easy' ? 12 : difficulty === 'medium' ? 20 : 25;
+                        num1 = Math.floor(Math.random() * maxMult) + 1;
+                        num2 = Math.floor(Math.random() * maxMult) + 1;
+                        correctAnswer = num1 * num2;
+                        break;
+                    case '/':
+                        correctAnswer = Math.floor(Math.random() * 20) + 1;
+                        num2 = Math.floor(Math.random() * 10) + 2;
+                        num1 = correctAnswer * num2;
+                        break;
+                }
+
+                return {
+                    question: `${num1} ${operation} ${num2} = ?`,
+                    correctAnswer,
+                    options: this.generateOptions(correctAnswer)
+                };
+            }
+
+            generateAlgebraTask() {
+                const difficulty = this.currentDifficulty;
+                const taskTypes = difficulty === 'easy' ? ['linear'] : 
+                                 difficulty === 'medium' ? ['linear', 'quadratic'] : 
+                                 ['linear', 'quadratic', 'system'];
+                
+                const taskType = taskTypes[Math.floor(Math.random() * taskTypes.length)];
+                let question, correctAnswer;
+                
+                switch (taskType) {
+                    case 'linear':
+                        const a = Math.floor(Math.random() * 10) + 2;
+                        const b = Math.floor(Math.random() * 50) + 10;
+                        correctAnswer = Math.round((b / a) * 100) / 100;
+                        question = `Solve for x: ${a}x = ${b}`;
+                        break;
+                    case 'quadratic':
+                        const coef = Math.floor(Math.random() * 5) + 2;
+                        const constant = Math.floor(Math.random() * 50) + 25;
+                        correctAnswer = Math.round(Math.sqrt(constant / coef) * 100) / 100;
+                        question = `Solve for x: ${coef}x² = ${constant}`;
+                        break;
+                    case 'system':
+                        const x = Math.floor(Math.random() * 10) + 1;
+                        const y = Math.floor(Math.random() * 10) + 1;
+                        correctAnswer = x + y;
+                        question = `If x = ${x} and y = ${y}, what is x + y?`;
+                        break;
+                }
+
+                return {
+                    question,
+                    correctAnswer,
+                    options: this.generateOptions(correctAnswer, correctAnswer % 1 !== 0)
+                };
+            }
+
+            generateGeometryTask() {
+                const shapes = ['rectangle', 'circle', 'triangle', 'cylinder'];
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                
+                let question, correctAnswer;
+                
+                switch (shape) {
+                    case 'rectangle':
+                        const length = Math.floor(Math.random() * 20) + 5;
+                        const width = Math.floor(Math.random() * 15) + 3;
+                        const operation = Math.random() > 0.5 ? 'area' : 'perimeter';
+                        if (operation === 'area') {
+                            correctAnswer = length * width;
+                            question = `Find the area of a rectangle: length ${length}cm, width ${width}cm`;
+                        } else {
+                            correctAnswer = 2 * (length + width);
+                            question = `Find the perimeter of a rectangle: length ${length}cm, width ${width}cm`;
+                        }
+                        break;
+                    case 'circle':
+                        const radius = Math.floor(Math.random() * 10) + 3;
+                        const pi = 3.14;
+                        if (Math.random() > 0.5) {
+                            correctAnswer = Math.round(pi * radius * radius * 100) / 100;
+                            question = `Find the area of a circle with radius ${radius}cm (π = 3.14)`;
+                        } else {
+                            correctAnswer = Math.round(2 * pi * radius * 100) / 100;
+                            question = `Find the circumference of a circle with radius ${radius}cm (π = 3.14)`;
+                        }
+                        break;
+                    case 'triangle':
+                        const base = Math.floor(Math.random() * 15) + 5;
+                        const height = Math.floor(Math.random() * 12) + 4;
+                        correctAnswer = Math.round((0.5 * base * height) * 100) / 100;
+                        question = `Find the area of a triangle: base ${base}cm, height ${height}cm`;
+                        break;
+                    case 'cylinder':
+                        const r = Math.floor(Math.random() * 8) + 2;
+                        const h = Math.floor(Math.random() * 10) + 3;
+                        correctAnswer = Math.round(3.14 * r * r * h * 100) / 100;
+                        question = `Find the volume of a cylinder: radius ${r}cm, height ${h}cm (π = 3.14)`;
+                        break;
+                }
+
+                return {
+                    question,
+                    correctAnswer,
+                    options: this.generateOptions(correctAnswer, correctAnswer % 1 !== 0)
+                };
+            }
+
+            generateCalculusTask() {
+                const taskTypes = ['derivative', 'integral', 'limit'];
+                const taskType = taskTypes[Math.floor(Math.random() * taskTypes.length)];
+                
+                let question, correctAnswer;
+                
+                switch (taskType) {
+                    case 'derivative':
+                        const power = Math.floor(Math.random() * 5) + 2;
+                        const coef = Math.floor(Math.random() * 10) + 1;
+                        correctAnswer = coef * power;
+                        question = `Find the derivative of ${coef}x^${power}. What is the coefficient of x^${power-1}?`;
+                        break;
+                    case 'integral':
+                        const p = Math.floor(Math.random() * 4) + 1;
+                        const c = Math.floor(Math.random() * 8) + 1;
+                        correctAnswer = Math.round((c / (p + 1)) * 100) / 100;
+                        question = `Integrate ${c}x^${p}. What is the coefficient of x^${p+1}?`;
+                        break;
+                    case 'limit':
+                        const a = Math.floor(Math.random() * 10) + 1;
+                        const b = Math.floor(Math.random() * 10) + 1;
+                        correctAnswer = a + b;
+                        question = `What is the limit of (${a}x + ${b}) as x approaches 1?`;
+                        break;
+                }
+
+                return {
+                    question,
+                    correctAnswer,
+                    options: this.generateOptions(correctAnswer, correctAnswer % 1 !== 0)
+                };
+            }
+
+            generateStatisticsTask() {
+                const taskTypes = ['mean', 'median', 'probability'];
+                const taskType = taskTypes[Math.floor(Math.random() * taskTypes.length)];
+                
+                let question, correctAnswer;
+                
+                switch (taskType) {
+                    case 'mean':
+                        const numbers = Array.from({length: 5}, () => Math.floor(Math.random() * 20) + 1);
+                        correctAnswer = Math.round((numbers.reduce((a, b) => a + b, 0) / numbers.length) * 100) / 100;
+                        question = `Find the mean of: ${numbers.join(', ')}`;
+                        break;
+                    case 'median':
+                        const nums = Array.from({length: 5}, () => Math.floor(Math.random() * 30) + 1).sort((a, b) => a - b);
+                        correctAnswer = nums[2];
+                        question = `Find the median of: ${nums.join(', ')}`;
+                        break;
+                    case 'probability':
+                        const favorable = Math.floor(Math.random() * 8) + 1;
+                        const total = favorable + Math.floor(Math.random() * 10) + 5;
+                        correctAnswer = Math.round((favorable / total) * 100) / 100;
+                        question = `What is the probability of success if there are ${favorable} favorable outcomes out of ${total} total outcomes? (as decimal)`;
+                        break;
+                }
+
+                return {
+                    question,
+                    correctAnswer,
+                    options: this.generateOptions(correctAnswer, correctAnswer % 1 !== 0)
+                };
+            }
+
+            generateBrainTrainingTask() {
+                const taskTypes = ['pattern', 'logic', 'sequence', 'memory'];
+                const taskType = taskTypes[Math.floor(Math.random() * taskTypes.length)];
+                
+                let question, correctAnswer;
+                
+                switch (taskType) {
+                    case 'pattern':
+                        const start = Math.floor(Math.random() * 10) + 1;
+                        const step = Math.floor(Math.random() * 5) + 2;
+                        const sequence = [start, start + step, start + 2*step, start + 3*step];
+                        correctAnswer = start + 4*step;
+                        question = `What's the next number in this pattern? ${sequence.join(', ')}, ?`;
+                        break;
+                    case 'logic':
+                        const a = Math.floor(Math.random() * 20) + 10;
+                        const b = Math.floor(Math.random() * 10) + 5;
+                        correctAnswer = Math.max(a, b) - Math.min(a, b);
+                        question = `What is the difference between ${a} and ${b}?`;
+                        break;
+                    case 'sequence':
+                        const base = Math.floor(Math.random() * 5) + 2;
+                        const seq = [base, base*2, base*4, base*8];
+                        correctAnswer = base*16;
+                        question = `Complete the sequence: ${seq.join(', ')}, ?`;
+                        break;
+                    case 'memory':
+                        const digits = Array.from({length: 4}, () => Math.floor(Math.random() * 10));
+                        correctAnswer = parseInt(digits.join(''));
+                        question = `Remember this number: ${digits.join('')}. What was it?`;
+                        break;
+                }
+
+                return {
+                    question,
+                    correctAnswer,
+                    options: this.generateOptions(correctAnswer)
+                };
+            }
+
+            generateOptions(correctAnswer, isDecimal = false) {
+                const options = [correctAnswer];
+                
+                while (options.length < 4) {
+                    let wrongAnswer;
+                    if (isDecimal) {
+                        const variation = (Math.random() - 0.5) * correctAnswer * 0.5;
+                        wrongAnswer = Math.round((correctAnswer + variation) * 100) / 100;
+                    } else {
+                        const variation = Math.floor(Math.random() * 20) - 10;
+                        wrongAnswer = correctAnswer + variation;
+                    }
+                    
+                    if (wrongAnswer > 0 && !options.includes(wrongAnswer)) {
+                        options.push(wrongAnswer);
+                    }
+                }
+                
+                return this.shuffleArray(options);
+            }
+
+            shuffleArray(array) {
+                const shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled;
+            }
+
+            // Task Management
+            startTask(taskType) {
+                this.currentTask = {
+                    type: taskType,
+                    currentQuestion: 0,
+                    totalQuestions: 10,
+                    score: 0,
+                    startTime: Date.now()
+                };
+                
+                this.questionIndex = 0;
+                this.showTaskScreen();
+                this.loadNextQuestion();
+            }
+
+            loadNextQuestion() {
+                if (this.questionIndex >= this.currentTask.totalQuestions) {
+                    this.completeTask();
+                    return;
+                }
+
+                let questionData;
+                switch (this.currentTask.type) {
+                    case 'math':
+                        questionData = this.generateMathTask();
+                        break;
+                    case 'algebra':
+                        questionData = this.generateAlgebraTask();
+                        break;
+                    case 'geometry':
+                        questionData = this.generateGeometryTask();
+                        break;
+                    case 'calculus':
+                        questionData = this.generateCalculusTask();
+                        break;
+                    case 'statistics':
+                        questionData = this.generateStatisticsTask();
+                        break;
+                    case 'braintraining':
+                        questionData = this.generateBrainTrainingTask();
+                        break;
+                    default:
+                        questionData = this.generateMathTask();
+                }
+
+                this.currentTask.currentQuestionData = questionData;
+                this.displayQuestion(questionData);
+                this.startTimer();
+            }
+
+            displayQuestion(questionData) {
+                const questionText = document.getElementById('questionText');
+                const optionsContainer = document.getElementById('optionsContainer');
+                const currentQuestionSpan = document.getElementById('currentQuestion');
+                const totalQuestionsSpan = document.getElementById('totalQuestions');
+
+                questionText.textContent = questionData.question;
+                currentQuestionSpan.textContent = this.questionIndex + 1;
+                totalQuestionsSpan.textContent = this.currentTask.totalQuestions;
+
+                optionsContainer.innerHTML = '';
+                questionData.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.className = 'option-btn';
+                    button.textContent = option;
+                    button.onclick = () => this.selectAnswer(option);
+                    optionsContainer.appendChild(button);
+                });
+            }
+
+            selectAnswer(selectedAnswer) {
+                this.stopTimer();
+                const correctAnswer = this.currentTask.currentQuestionData.correctAnswer;
+                const isCorrect = selectedAnswer == correctAnswer;
+                const answerTime = 30 - this.timeRemaining;
+
+                // Update user stats
+                this.currentUser.totalAnswers++;
+                if (isCorrect) {
+                    this.currentUser.correctAnswers++;
+                }
+
+                // Visual feedback
+                const options = document.querySelectorAll('.option-btn');
+                options.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent == correctAnswer) {
+                        btn.classList.add('correct');
+                    } else if (btn.textContent == selectedAnswer && !isCorrect) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                if (isCorrect) {
+                    this.currentTask.score++;
+                    
+                    // Enhanced reward calculation
+                    let baseCoins = this.getTaskBaseReward(this.currentTask.type);
+                    let difficultyMultiplier = this.getDifficultyMultiplier();
+                    let speedBonus = answerTime < 10 ? Math.floor(baseCoins * 0.3) : 0;
+                    
+                    let totalCoins = Math.floor((baseCoins * difficultyMultiplier) + speedBonus);
+                    
+                    this.addCoins(totalCoins);
+                    
+                    let message = `Amazing! You earned ${totalCoins} coins!`;
+                    if (speedBonus > 0) message += ` (+${speedBonus} speed bonus!)`;
+                    
+                    this.showResultModal(true, 'Correct! 🎉', message);
+                } else {
+                    this.showResultModal(false, 'Not quite! 🤔', `The correct answer was ${correctAnswer}. Keep learning!`);
+                }
+                
+                this.saveUserSession();
+                this.updateAllUsers();
+            }
+
+            getTaskBaseReward(taskType) {
+                const rewards = {
+                    'math': Math.floor(Math.random() * 6) + 5,
+                    'algebra': Math.floor(Math.random() * 16) + 15,
+                    'geometry': Math.floor(Math.random() * 14) + 12,
+                    'calculus': Math.floor(Math.random() * 26) + 25,
+                    'statistics': Math.floor(Math.random() * 19) + 18,
+                    'braintraining': Math.floor(Math.random() * 13) + 8
+                };
+                return rewards[taskType] || 5;
+            }
+
+            getDifficultyMultiplier() {
+                const multipliers = { easy: 1.5, medium: 2, hard: 3 };
+                return multipliers[this.currentDifficulty] || 1.5;
+            }
+
+            addCoins(amount) {
+                this.currentUser.coins += amount;
+                this.currentUser.totalEarnings += amount;
+                
+                // Add XP and check for level up
+                const xpGained = Math.floor(amount / 2);
+                this.currentUser.xp += xpGained;
+                this.checkLevelUp();
+                
+                // Add transaction
+                const transaction = {
+                    id: Date.now(),
+                    type: 'earning',
+                    description: `${this.currentTask.type.charAt(0).toUpperCase() + this.currentTask.type.slice(1)} Task (${this.currentDifficulty})`,
+                    amount: amount,
+                    xp: xpGained,
+                    date: new Date().toISOString()
+                };
+                
+                this.currentUser.transactions.push(transaction);
+                this.saveUserSession();
+                this.updateAllUsers();
+                this.updateCoinDisplay();
+                this.updateCashoutButton();
+                this.updateUserStats();
+            }
+
+            checkLevelUp() {
+                const requiredXP = this.currentUser.level * 100;
+                if (this.currentUser.xp >= requiredXP) {
+                    this.currentUser.level++;
+                    this.currentUser.xp -= requiredXP;
+                    
+                    const levelBonus = this.currentUser.level * 25;
+                    this.currentUser.coins += levelBonus;
+                    
+                    this.showNotification(`🎊 Level Up! You're now level ${this.currentUser.level}! Bonus: ${levelBonus} coins!`, 'success');
+                }
+            }
+
+            checkDailyLogin() {
+                const today = new Date().toDateString();
+                const lastLogin = this.currentUser?.lastLoginDate;
+                
+                if (this.currentUser && lastLogin !== today) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    
+                    if (lastLogin === yesterday.toDateString()) {
+                        this.currentUser.dailyStreak++;
+                    } else {
+                        this.currentUser.dailyStreak = 1;
+                    }
+                    
+                    this.currentUser.lastLoginDate = today;
+                    
+                    const loginBonus = Math.min(this.currentUser.dailyStreak * 10, 100);
+                    this.currentUser.coins += loginBonus;
+                    
+                    const transaction = {
+                        id: Date.now(),
+                        type: 'daily_bonus',
+                        description: `Daily Login Bonus (Day ${this.currentUser.dailyStreak})`,
+                        amount: loginBonus,
+                        date: new Date().toISOString()
+                    };
+                    
+                    this.currentUser.transactions.push(transaction);
+                    this.showNotification(`🔥 Daily Login Bonus: ${loginBonus} coins! (${this.currentUser.dailyStreak} day streak)`, 'success');
+                }
+            }
+
+            updateUserStats() {
+                if (!this.currentUser) return;
+                
+                const dailyStreakEl = document.getElementById('dailyStreak');
+                const userLevelEl = document.getElementById('userLevel');
+                const badgeCountEl = document.getElementById('badgeCount');
+                const accuracyRateEl = document.getElementById('accuracyRate');
+                
+                if (dailyStreakEl) dailyStreakEl.textContent = this.currentUser.dailyStreak || 0;
+                if (userLevelEl) userLevelEl.textContent = this.currentUser.level || 1;
+                if (badgeCountEl) badgeCountEl.textContent = this.currentUser.achievements?.length || 0;
+                
+                if (accuracyRateEl) {
+                    const accuracy = this.currentUser.totalAnswers > 0 
+                        ? Math.round((this.currentUser.correctAnswers / this.currentUser.totalAnswers) * 100)
+                        : 0;
+                    accuracyRateEl.textContent = `${accuracy}%`;
+                }
+            }
+
+            updateAllUsers() {
+                const allUsers = JSON.parse(localStorage.getItem('mathEarnUsers') || '[]');
+                const userIndex = allUsers.findIndex(u => u.id === this.currentUser.id);
+                if (userIndex !== -1) {
+                    allUsers[userIndex] = this.currentUser;
+                    localStorage.setItem('mathEarnUsers', JSON.stringify(allUsers));
+                }
+            }
+
+            completeTask() {
+                this.currentUser.tasksCompleted++;
+                const accuracy = Math.round((this.currentTask.score / this.currentTask.totalQuestions) * 100);
+                
+                // Bonus for perfect score
+                if (accuracy === 100) {
+                    const perfectBonus = 50;
+                    this.currentUser.coins += perfectBonus;
+                    this.showNotification(`🏆 Perfect Score Bonus! +${perfectBonus} coins!`, 'success');
+                }
+                
+                this.showNotification(`✅ Task completed! You scored ${this.currentTask.score}/${this.currentTask.totalQuestions} (${accuracy}% accuracy)!`, 'success');
+                this.saveUserSession();
+                this.updateAllUsers();
+                this.showDashboard();
+            }
+
+            // Lucky Wheel
+            spinWheel() {
+                const today = new Date().toDateString();
+                if (this.currentUser.lastWheelSpin === today) {
+                    this.showNotification('You can only spin once per day! Come back tomorrow!', 'error');
+                    return;
+                }
+
+                const button = document.getElementById('spinButton');
+                button.disabled = true;
+                
+                const wheel = document.getElementById('wheelSpinner');
+                const rewards = [10, 25, 50, 100, 5, 200];
+                const selectedReward = rewards[Math.floor(Math.random() * rewards.length)];
+                
+                const rotations = Math.floor(Math.random() * 5) + 3;
+                const finalRotation = rotations * 360 + (selectedReward * 60);
+                
+                wheel.style.transform = `rotate(${finalRotation}deg)`;
+                
+                setTimeout(() => {
+                    this.currentUser.coins += selectedReward;
+                    this.currentUser.lastWheelSpin = today;
+                    
+                    const transaction = {
+                        id: Date.now(),
+                        type: 'wheel_bonus',
+                        description: `Lucky Wheel Spin`,
+                        amount: selectedReward,
+                        date: new Date().toISOString()
+                    };
+                    
+                    this.currentUser.transactions.push(transaction);
+                    this.saveUserSession();
+                    this.updateAllUsers();
+                    this.updateCoinDisplay();
+                    
+                    this.showNotification(`🎉 Lucky! You won ${selectedReward} coins!`, 'success');
+                    document.getElementById('wheelStatus').textContent = 'Come back tomorrow for another spin!';
+                }, 3000);
+            }
+
+            // Mini Games
+            startQuickMath() {
+                this.showNotification('⚡ Speed Math: Answer 5 quick questions!', 'success');
+                this.currentTask = { type: 'math', totalQuestions: 5, score: 0, isSpeedRound: true };
+                this.questionIndex = 0;
+                this.showTaskScreen();
+                this.loadNextQuestion();
+            }
+
+            startMemoryGame() {
+                this.showNotification('🧠 Memory Game: Remember the sequence!', 'success');
+                const sequence = Array.from({length: 4}, () => Math.floor(Math.random() * 10));
+                setTimeout(() => {
+                    const userAnswer = prompt(`Remember this sequence: ${sequence.join('')}\n\nWhat was the sequence?`);
+                    if (userAnswer === sequence.join('')) {
+                        this.addCoins(30);
+                        this.showNotification('🎉 Perfect memory! +30 coins!', 'success');
+                    } else {
+                        this.showNotification('🤔 Not quite right. Try again tomorrow!', 'error');
+                    }
+                }, 100);
+            }
+
+            startPuzzleGame() {
+                this.showNotification('🧩 Number Puzzle: Find the pattern!', 'success');
+                const base = Math.floor(Math.random() * 5) + 2;
+                const sequence = [base, base*2, base*4, base*8];
+                const answer = base*16;
+                
+                setTimeout(() => {
+                    const userAnswer = prompt(`What comes next in this sequence?\n${sequence.join(', ')}, ?`);
+                    if (parseInt(userAnswer) === answer) {
+                        this.addCoins(35);
+                        this.showNotification('🎉 Excellent pattern recognition! +35 coins!', 'success');
+                    } else {
+                        this.showNotification(`🤔 The answer was ${answer}. Try again tomorrow!`, 'error');
+                    }
+                }, 100);
+            }
+
+            // Daily Challenge
+            startDailyChallenge() {
+                this.showNotification('⭐ Daily Challenge: Extra rewards await!', 'success');
+                this.currentTask = { type: 'algebra', totalQuestions: 5, score: 0, isChallenge: true };
+                this.questionIndex = 0;
+                this.showTaskScreen();
+                this.loadNextQuestion();
+            }
+
+            // Timer Management
+            startTimer() {
+                // Clear any existing timer first
+                this.stopTimer();
+                
+                this.timeRemaining = 45; // Increased time to 45 seconds
+                this.updateTimerDisplay();
+                
+                this.timer = setInterval(() => {
+                    this.timeRemaining--;
+                    this.updateTimerDisplay();
+                    
+                    if (this.timeRemaining <= 0) {
+                        this.timeUp();
+                    }
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+                // Reset timer display only if we're not in an active task
+                if (!this.currentTask || !document.getElementById('taskScreen').style.display === 'block') {
+                    this.timeRemaining = 45;
+                    this.updateTimerDisplay();
+                }
+            }
+
+            updateTimerDisplay() {
+                const timerElement = document.getElementById('timeRemaining');
+                if (timerElement) {
+                    timerElement.textContent = `${this.timeRemaining}s`;
+                }
+            }
+
+            timeUp() {
+                this.stopTimer();
+                const correctAnswer = this.currentTask.currentQuestionData.correctAnswer;
+                this.showResultModal(false, 'Time\'s Up! ⏰', `The correct answer was ${correctAnswer}. Speed up next time!`);
+                
+                const options = document.querySelectorAll('.option-btn');
+                options.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent == correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            // Cashout Management
+            selectReward(rewardType, requiredCoins) {
+                if (this.currentUser.coins < requiredCoins) {
+                    this.showNotification(`You need ${requiredCoins} coins for this reward!`, 'error');
+                    return;
+                }
+
+                this.selectedReward = { type: rewardType, coins: requiredCoins };
+                
+                const address = prompt(`Enter your ${rewardType} email/address:`);
+                if (address) {
+                    this.processCashout(address);
+                }
+            }
+
+            processCashout(paymentAddress) {
+                if (!this.selectedReward) return;
+
+                this.currentUser.coins -= this.selectedReward.coins;
+                
+                const transaction = {
+                    id: Date.now(),
+                    type: 'cashout',
+                    description: `${this.getRewardName(this.selectedReward.type)} Reward`,
+                    amount: -this.selectedReward.coins,
+                    rewardType: this.selectedReward.type,
+                    paymentAddress,
+                    status: 'pending',
+                    date: new Date().toISOString()
+                };
+                
+                this.currentUser.transactions.push(transaction);
+                this.saveUserSession();
+                this.updateAllUsers();
+                this.updateCoinDisplay();
+                this.updateCashoutButton();
+                
+                this.showNotification(`🎉 Cashout request submitted! You'll receive your reward within 3-5 business days.`, 'success');
+                this.showDashboard();
+            }
+
+            getRewardName(type) {
+                const names = {
+                    'paypal': 'PayPal Payment',
+                    'amazon': 'Amazon Gift Card',
+                    'google': 'Google Play Gift Card'
+                };
+                return names[type] || 'Reward';
+            }
+
+            // UI Management
+            showAuthScreen() {
+                this.hideAllScreens();
+                document.getElementById('authScreen').style.display = 'block';
+                document.getElementById('headerRight').style.display = 'none';
+            }
+
+            showDashboard() {
+                // Stop any running timers when returning to dashboard
+                this.stopTimer();
+                this.currentTask = null;
+                
+                this.hideAllScreens();
+                document.getElementById('dashboardScreen').style.display = 'block';
+                document.getElementById('headerRight').style.display = 'flex';
+                
+                if (this.currentUser) {
+                    document.getElementById('dashboardUserName').textContent = this.currentUser.name;
+                    document.getElementById('userNameDisplay').textContent = this.currentUser.name;
+                    this.updateCoinDisplay();
+                    this.updateUserStats();
+                }
+            }
+
+            showTaskScreen() {
+                // Stop any existing timers before showing task screen
+                this.stopTimer();
+                
+                this.hideAllScreens();
+                document.getElementById('taskScreen').style.display = 'block';
+                
+                const titles = {
+                    'math': 'Basic Math',
+                    'algebra': 'Algebra',
+                    'geometry': 'Geometry',
+                    'calculus': 'Calculus',
+                    'statistics': 'Statistics',
+                    'braintraining': 'Brain Training'
+                };
+                
+                document.getElementById('taskTypeTitle').textContent = titles[this.currentTask.type] || 'Tasks';
+            }
+
+            showMiniGames() {
+                this.hideAllScreens();
+                document.getElementById('miniGamesScreen').style.display = 'block';
+                
+                // Update wheel status
+                const today = new Date().toDateString();
+                const canSpin = this.currentUser.lastWheelSpin !== today;
+                document.getElementById('spinButton').disabled = !canSpin;
+                document.getElementById('wheelStatus').textContent = canSpin ? 
+                    'Free spin available!' : 'Come back tomorrow for another spin!';
+            }
+
+            showAchievements() {
+                this.hideAllScreens();
+                document.getElementById('achievementsScreen').style.display = 'block';
+            }
+
+            showLeaderboard() {
+                this.hideAllScreens();
+                document.getElementById('leaderboardScreen').style.display = 'block';
+            }
+
+            showDailyChallenge() {
+                this.hideAllScreens();
+                document.getElementById('dailyChallengeScreen').style.display = 'block';
+            }
+
+            showTournaments() {
+                this.hideAllScreens();
+                document.getElementById('tournamentsScreen').style.display = 'block';
+            }
+
+            showFriends() {
+                this.hideAllScreens();
+                document.getElementById('friendsScreen').style.display = 'block';
+            }
+
+            showPowerUps() {
+                this.hideAllScreens();
+                document.getElementById('powerUpsScreen').style.display = 'block';
+            }
+
+            showTransactions() {
+                this.hideAllScreens();
+                document.getElementById('transactionsScreen').style.display = 'block';
+                this.renderTransactions();
+            }
+
+            showCashout() {
+                if (this.currentUser.coins < 90) {
+                    this.showNotification('You need at least 90 coins to cash out!', 'error');
+                    return;
+                }
+                
+                this.hideAllScreens();
+                document.getElementById('cashoutScreen').style.display = 'block';
+                document.getElementById('cashoutBalance').textContent = this.currentUser.coins;
+            }
+
+            hideAllScreens() {
+                const screens = document.querySelectorAll('.screen');
+                screens.forEach(screen => screen.style.display = 'none');
+            }
+
+            updateCoinDisplay() {
+                const coinBalance = document.getElementById('coinBalance');
+                if (coinBalance && this.currentUser) {
+                    coinBalance.textContent = this.currentUser.coins;
+                }
+            }
+
+            updateCashoutButton() {
+                const cashoutBtn = document.getElementById('cashoutBtn');
+                if (cashoutBtn && this.currentUser) {
+                    if (this.currentUser.coins >= 90) {
+                        cashoutBtn.disabled = false;
+                        cashoutBtn.innerHTML = '<i class="fas fa-money-bill-wave"></i> Cash Out Available!';
+                    } else {
+                        cashoutBtn.disabled = true;
+                        cashoutBtn.innerHTML = `<i class="fas fa-money-bill-wave"></i> Cash Out (${90 - this.currentUser.coins} coins needed)`;
+                    }
+                }
+            }
+
+            renderTransactions() {
+                const container = document.getElementById('transactionsList');
+                if (!this.currentUser || !this.currentUser.transactions || this.currentUser.transactions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <h3>No Transactions Yet</h3>
+                            <p>Complete tasks to see your earnings history.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const transactions = [...this.currentUser.transactions].reverse().slice(0, 20);
+                
+                container.innerHTML = transactions.map(transaction => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: hsla(var(--background), 0.5); border: 1px solid hsl(var(--border)); border-radius: 10px; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 1.5rem; color: hsl(var(--success));">
+                                <i class="fas ${this.getTransactionIcon(transaction.type)}"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: hsl(var(--text)); margin-bottom: 0.25rem;">${transaction.description}</h4>
+                                <p style="color: hsl(var(--text-secondary)); font-size: 0.9rem;">${new Date(transaction.date).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                        <div style="font-weight: bold; color: ${transaction.amount > 0 ? 'hsl(var(--success))' : 'hsl(var(--danger))'};">
+                            ${transaction.amount > 0 ? '+' : ''}${transaction.amount} coins
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getTransactionIcon(type) {
+                const icons = {
+                    'earning': 'fa-coins',
+                    'bonus': 'fa-gift',
+                    'daily_bonus': 'fa-calendar-day',
+                    'wheel_bonus': 'fa-sync-alt',
+                    'achievement': 'fa-trophy',
+                    'cashout': 'fa-money-bill-wave'
+                };
+                return icons[type] || 'fa-circle';
+            }
+
+            showResultModal(isCorrect, title, message) {
+                const modal = document.getElementById('resultModal');
+                const icon = document.getElementById('resultIcon');
+                const titleEl = document.getElementById('resultTitle');
+                const messageEl = document.getElementById('resultMessage');
+                
+                icon.className = `result-icon ${isCorrect ? 'correct' : 'incorrect'}`;
+                icon.innerHTML = `<i class="fas ${isCorrect ? 'fa-check' : 'fa-times'}"></i>`;
+                titleEl.textContent = title;
+                messageEl.textContent = message;
+                
+                modal.style.display = 'block';
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                const text = document.getElementById('notificationText');
+                
+                text.textContent = message;
+                notification.className = `notification ${type} show`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 4000);
+            }
+
+            bindEvents() {
+                // Auth forms
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail').value;
+                    const password = document.getElementById('loginPassword').value;
+                    this.login(email, password);
+                });
+
+                document.getElementById('registerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('registerName').value;
+                    const email = document.getElementById('registerEmail').value;
+                    const password = document.getElementById('registerPassword').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    
+                    if (password !== confirmPassword) {
+                        this.showNotification('Passwords do not match!', 'error');
+                        return;
+                    }
+                    
+                    this.register(name, email, password);
+                });
+            }
+        }
+
+        // Global Functions
+        function switchTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabs[0].classList.add('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const icon = document.getElementById('themeIcon');
+            icon.className = document.body.classList.contains('dark-theme') ? 'fas fa-sun' : 'fas fa-moon';
+            
+            // Save theme preference
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+
+        function setDifficulty(difficulty) {
+            app.setDifficulty(difficulty);
+        }
+
+        function logout() {
+            app.logout();
+        }
+
+        function startTask(taskType) {
+            app.startTask(taskType);
+        }
+
+        function showDashboard() {
+            app.showDashboard();
+        }
+
+        function showMiniGames() {
+            app.showMiniGames();
+        }
+
+        function showTransactions() {
+            app.showTransactions();
+        }
+
+        function showCashout() {
+            app.showCashout();
+        }
+
+        function showAchievements() {
+            app.showAchievements();
+        }
+
+        function showLeaderboard() {
+            app.showLeaderboard();
+        }
+
+        function showDailyChallenge() {
+            app.showDailyChallenge();
+        }
+
+        function showTournaments() {
+            app.showTournaments();
+        }
+
+        function showFriends() {
+            app.showFriends();
+        }
+
+        function showPowerUps() {
+            app.showPowerUps();
+        }
+
+        function startDailyChallenge() {
+            app.startDailyChallenge();
+        }
+
+        function selectReward(rewardType, requiredCoins) {
+            app.selectReward(rewardType, requiredCoins);
+        }
+
+        function spinWheel() {
+            app.spinWheel();
+        }
+
+        function startQuickMath() {
+            app.startQuickMath();
+        }
+
+        function startMemoryGame() {
+            app.startMemoryGame();
+        }
+
+        function startPuzzleGame() {
+            app.startPuzzleGame();
+        }
+
+        function nextQuestion() {
+            document.getElementById('resultModal').style.display = 'none';
+            app.questionIndex++;
+            app.loadNextQuestion();
+        }
+
+        // Initialize the app
+        const app = new MathEarnUltimate();
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('themeIcon').className = 'fas fa-sun';
+        }
+    </script>
+</body>
+</html>
